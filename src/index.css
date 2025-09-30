@@ -1,1 +1,43 @@
 @import "tailwindcss";
+
+@theme {
+    --color-dark: #000;
+    --color-dark-secondary: #27272A;
+    --color-text-secondary: #a1a1aa;
+    --color-modale-test: ##71717A;
+    --color-secondary: #A9E851;
+    --color-secondary-300: #A9E8510F;
+
+    --color-table-border: #FFFFFF14;
+}
+
+body {
+    color: #FFF;
+    height: 100vh;
+    
+
+    background-color: #212124;
+}
+
+#token-search-input::placeholder {
+    color: #71717A;
+    font-size: medium;
+    line-height: 1.25rem;
+    font-weight: 400;
+}
+
+#token-search-input:focus-visible {
+    outline: 1px solid #FFFFFF14;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+:root {
+    --box-shadow-primary: 0px 8px 16px 0px #00000014;
+    --box-shadow-secondary: 0px 4px 8px 0px #00000014;
+    --box-shadow-tertiary: 0px 0px 0px 1px #00000014;
+}
