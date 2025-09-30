@@ -1,5 +1,5 @@
 import { Logo, WalletIcon } from "../../../icons"
-import Button from "../Button"
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const Navbar = () => {
     return (
@@ -9,8 +9,9 @@ const Navbar = () => {
                 <span className="font-semibold text-xl leading-6 tracking-[0%]">Token Portfolio</span>
             </div>
 
-            <div>
-                <Button text="Connected Wallet" icon={<WalletIcon />} type="secondary" className="rounded-full" />
+            <div className="flex-center gap-[6px] connected-btn">
+                <WalletIcon />
+                <ConnectButton />
             </div>
         </div>
     )

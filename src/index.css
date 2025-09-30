@@ -41,3 +41,27 @@ body {
     --box-shadow-secondary: 0px 4px 8px 0px #00000014;
     --box-shadow-tertiary: 0px 0px 0px 1px #00000014;
 }
+
+button[data-testid="rk-connect-button"] {
+    padding: 0 !important;
+    background: transparent !important;
+    color: #18181B !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+    font-weight: 500 !important;
+    line-height: 1.25rem !important;
+}
+
+.connected-btn {
+    padding: 0 0.75rem;
+    background: #A9E851;
+    border: 1px solid #1F6619;
+    box-shadow: 0px 0px 0px 1px #1F6619;
+    box-shadow: 0px 1px 2px 0px #1F661966;
+    box-shadow: 0px 0.75px 0px 0px #FFFFFF33 inset;
+    border-radius: 2rem;
+    cursor: pointer;
+    
+}
