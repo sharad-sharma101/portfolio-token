@@ -2,18 +2,14 @@ import React from "react";
 import { Edit, Trash } from "../../../icons";
 import { removeCoinFromLocalStorage } from "../../../utils";
 import { useAppDispatch } from "../../../app/hooks";
-import { removeCoinFromRows } from "../../../features/portfolio/portfolioSlice";
+import { makeRowHoldingEditable, removeCoinFromRows } from "../../../features/portfolio/portfolioSlice";
 
 type ThreeDotMenuProps = {
-  onEditHoldings?: () => void;
-  disableEdit?: boolean;
   className?: string;
   coinID: string | number;
 };
 
 const ThreeDotMenu: React.FC<ThreeDotMenuProps> = ({
-  onEditHoldings,
-  disableEdit = true,
   className = "",
   coinID = ""
 }) => {
@@ -55,14 +51,11 @@ const ThreeDotMenu: React.FC<ThreeDotMenuProps> = ({
         >
           <button
             role="menuitem"
-            disabled={disableEdit}
             onClick={() => {
-              if (!disableEdit) onEditHoldings?.();
+               dispatch(makeRowHoldingEditable(coinID));
               setOpen(false);
             }}
-            className={`w-full text-left px-4 py-3 flex items-center gap-2 border-b border-white/10 ${
-              disableEdit ? "text-[#8A8A91] cursor-not-allowed" : "hover:bg-white/5"
-            }`}
+            className={`w-full text-left px-4 py-3 flex items-center gap-2 border-b border-white/10 hover:bg-white/5`}
           >
             <Edit />
             Edit Holdings

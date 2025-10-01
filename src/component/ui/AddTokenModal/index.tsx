@@ -4,8 +4,8 @@ import Button from "../Button";
 import { useQuery } from "@tanstack/react-query";
 import Checkbox from "../Checkbox";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { changleModalState } from "../../../features/portfolio/portfolioSlice";
-import { addCoinsToLocalStorage } from "../../../utils";
+import { changleModalState, setWatchListRows } from "../../../features/portfolio/portfolioSlice";
+import { addCoinsToLocalStorage, toWatchlistRows } from "../../../utils";
 
 function useDebounce<T>(value: T, delay = 300) {
   const [v, setV] = useState(value);
@@ -79,6 +79,7 @@ const AddTokenModal = () => {
 
     function handleAddToWishlist() {
       addCoinsToLocalStorage(selectedCoin);
+      dispatch(setWatchListRows(toWatchlistRows()))
       dispatch(changleModalState(false))
     }
 

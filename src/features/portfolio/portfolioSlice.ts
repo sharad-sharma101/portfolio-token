@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { WatchListRowSerializable } from '../../utils'
+import { updateHoldingInLocalStorage, type WatchListRowSerializable } from '../../utils'
 
 interface PortfolioState {
   modalOpenState: boolean;
@@ -21,12 +21,31 @@ export const portfolioSlice = createSlice({
     setWatchListRows: (state, action: PayloadAction<WatchListRowSerializable[]>) => {
       state.watchListRows = action.payload;
     },
+    addNewlyAddedCoins: (state, action: PayloadAction<WatchListRowSerializable[]>) => {
+      state.watchListRows = [ ...state.watchListRows, ...action.payload];
+    },
     removeCoinFromRows: (state, action: { payload: string | number }) => {
       const updatedRows = state.watchListRows.filter( (e :WatchListRowSerializable ) => e.id !== action.payload );
       state.watchListRows = [ ...updatedRows ];
     },
+    makeRowHoldingEditable: (state, action: { payload: string | number }) => {
+      const updatedRows = state.watchListRows.map( (e :WatchListRowSerializable ) => {
+        if(e.id === action.payload) return {...e, isEditable: true}
+        return { ...e };
+      });
+      state.watchListRows = [ ...updatedRows ];
+    },
+    changeHolding: (state, action: { payload: { id: string | number, holding: number } }) => {
+      const updatedRows = state.watchListRows.map( (e :WatchListRowSerializable ) => {
+        if(e.id === action.payload.id) return {...e, holding: action.payload.holding, isEditable: false}
+        return { ...e };
+      });
+      state.watchListRows = [ ...updatedRows ];
+
+      updateHoldingInLocalStorage(action.payload.id, action.payload.holding);
+    },
   },
 })
 
-export const { changleModalState, setWatchListRows, removeCoinFromRows } = portfolioSlice.actions
+export const { changleModalState, setWatchListRows, removeCoinFromRows, makeRowHoldingEditable, changeHolding, addNewlyAddedCoins } = portfolioSlice.actions
 export default portfolioSlice.reducer

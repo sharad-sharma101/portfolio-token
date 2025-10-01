@@ -42,6 +42,10 @@ body {
     --box-shadow-tertiary: 0px 0px 0px 1px #00000014;
 }
 
+input#holding-input {
+    outline: 1px solid #FFFFFF0a;
+}
+
 button[data-testid="rk-connect-button"] {
     padding: 0 !important;
     background: transparent !important;

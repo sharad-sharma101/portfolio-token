@@ -20,7 +20,7 @@ const Button = ( {text, icon, type = "primary", className, onClickFn = () => {},
     }, [isDisabled])
 
     return (
-        <button className={`flex justify-center items-center rounded-[6px] gap-[6px] px-3 py-2 ${typeTheme()} ${ !isDisabled && "cursor-pointer"} ${className}`} onClick={onClickFn} disabled={isDisabled}>
+        <button className={`flex justify-center items-center rounded-[6px] gap-[6px] min-h-7 px-3 py-2 ${typeTheme()} ${ !isDisabled && "cursor-pointer"} ${className}`} onClick={onClickFn} disabled={isDisabled}>
             { icon && <div>{icon}</div> }
             <div className={`font-medium text-sm leading-5`} >
                 {text}

@@ -7,7 +7,10 @@ export type WatchListRowSerializable = {
   token: string;
   price: number | null;
   change24h: number | null;
+  holding: number;
+  isEditable: boolean;
   sparklineUrl: string | null;
+  thumb: string;
 };
 
 export function toWatchlistRows(): WatchListRowSerializable[] {
@@ -17,10 +20,13 @@ export function toWatchlistRows(): WatchListRowSerializable[] {
     return list.map((item: any) => ({
       id: item.coin_id,
       token: item.name,
+      thumb: item.thumb,
       price: typeof item?.data?.price === 'number' ? item.data.price : null,
       change24h: typeof item?.data?.price_change_percentage_24h?.eur === 'number'
         ? item.data.price_change_percentage_24h.eur
         : null,
+      holding: item.holding,
+      isEditable: false,
       sparklineUrl: item?.data?.sparkline ?? null,
     }));
   } catch {
@@ -37,8 +43,10 @@ export function addCoinsToLocalStorage(coins: any[]) {
       const dedupToAdd = coins.filter(c => !existingIds.has(c.coin_id));
   
       if (dedupToAdd.length === 0) return;
+
+      const addHoldings = dedupToAdd.map( (e: any) => { return { ...e, "holding": 0  };} ) ;
   
-      localStorage.setItem(LS_KEY, JSON.stringify([...existing, ...dedupToAdd]));
+      localStorage.setItem(LS_KEY, JSON.stringify([...existing, ...addHoldings]));
     } catch {}
   }
 
@@ -49,5 +57,18 @@ export function addCoinsToLocalStorage(coins: any[]) {
       const list = JSON.parse(raw) as any[];
       const next = list.filter((c) => String(c.coin_id) !== String(coinId));
       localStorage.setItem(LS_KEY, JSON.stringify(next));
+    } catch {}
+  }
+
+
+  export function updateHoldingInLocalStorage(coinId: string | number, holding: number) {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (!raw) return;
+      const list = JSON.parse(raw) as any[];
+      const updated = list.map((c) => 
+        String(c.coin_id) === String(coinId) ? { ...c, holding } : c
+      );
+      localStorage.setItem(LS_KEY, JSON.stringify(updated));
     } catch {}
   }

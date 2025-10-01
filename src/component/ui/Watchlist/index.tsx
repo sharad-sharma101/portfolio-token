@@ -1,5 +1,6 @@
 import { useAppDispatch } from "../../../app/hooks";
 import { changleModalState } from "../../../features/portfolio/portfolioSlice";
+import useIsMobile from "../../../hooks/useIsMobile";
 import { AddIconDark, RefreshIcon, WatchListStar } from "../../../icons"
 import Button from "../Button";
 import Table from "../Table"
@@ -7,6 +8,7 @@ import Table from "../Table"
 const Watchlist = () => {
 
     const dispatch = useAppDispatch();
+    const isMobile = useIsMobile();
 
     return (
         <div className="flex flex-col gap-3">
@@ -18,7 +20,7 @@ const Watchlist = () => {
                 </div>
 
                 <div className="flex justify-center items-center gap-3">
-                    <Button text="Refresh Prices" icon={<RefreshIcon />} />
+                    { isMobile ? <Button text="" icon={<RefreshIcon />} /> : <Button text="Refresh Prices" icon={<RefreshIcon />} />}
                     <Button text="Add Token" type="secondary" icon={<AddIconDark />} onClickFn={() => dispatch(changleModalState(true))}/>
                 </div>
             </div>

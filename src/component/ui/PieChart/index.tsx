@@ -1,29 +1,24 @@
 import { Cell, Pie, PieChart, Tooltip } from 'recharts';
+import useIsMobile from '../../../hooks/useIsMobile';
 
-const data = [
-  { name: 'Group A', value: 400 },
-  { name: 'Group B', value: 300 },
-  { name: 'Group C', value: 300 },
-  { name: 'Group D', value: 200 },
-  { name: 'Group E', value: 300 },
-  { name: 'Group Ff', value: 200 },
-];
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FFC49F'];
 
-const PieChartComponent = () => {
+const PieChartComponent = ({ data }: any) => {
+    const isMobile = useIsMobile();
+    
     return (
-        <PieChart width={240} height={240}>
+        <PieChart width={isMobile ? 300 : 240} height={isMobile ? 300 : 240}>
         <Pie
           data={data}
-          cx={100}
-          cy={100}
-          innerRadius={50}
-          outerRadius={100}
+          cx={isMobile ? 150 : 100}
+          cy={isMobile ? 150 : 100}
+          innerRadius={isMobile ? 70 : 50}
+          outerRadius={isMobile ? 140 : 100}
           fill="#8884d8"
-          paddingAngle={1}
+          paddingAngle={0}
           dataKey="value"
         >
-          {data.map((entry, index) => (
+          {data.map((entry: any, index: any) => (
             <Cell key={`cell-${entry.name}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
