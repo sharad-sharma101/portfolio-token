@@ -7,6 +7,7 @@ type PaginationProps = {
   onPageChange: (page: number) => void;
   previousText?: string;
   nextText?: string;
+  totalResults: number;
 };
 
 const defaultButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = (
@@ -20,6 +21,7 @@ const Pagination: React.FC<PaginationProps> = ({
   onPageChange,
   previousText = "Previous",
   nextText = "Next",
+  totalResults
 }) => {
   const [visiblePages, setVisiblePages] = useState<number[]>([]);
 
@@ -56,55 +58,56 @@ const Pagination: React.FC<PaginationProps> = ({
   }
 
   const activePage = page + 1;
+  console.log(visiblePages);
 
   if(pages <= 1) return <div className="mt-3" ></div>;
 
+
   return (
-    <div className="Table__pagination">
-      {/* Previous */}
-      <div className="Table__prevPageWrapper">
-        <PageButtonComponent
-          className="Table__pageButton"
-          onClick={() => {
-            if (activePage === 1) return;
-            changePage(activePage - 1);
-          }}
-          disabled={activePage === 1}
-        >
-          {previousText}
-        </PageButtonComponent>
+    <div className="Table__pagination border border-t border-table-border">
+
+      <div className="flex-center gap-2">
+          <div className="Table__visiblePagesWrapper">
+           {((activePage-1)* 10 ) + 1} - { ((activePage-1)* 10 ) + (activePage === visiblePages.length ? ( totalResults %10) : 10) } of {totalResults} results
+          </div>
       </div>
 
-      {/* Visible Pages */}
-      <div className="Table__visiblePagesWrapper">
-        {visiblePages.map((p, index, array) => (
-          <PageButtonComponent
-            key={p}
-            className={
-              activePage === p
-                ? "Table__pageButton Table__pageButton--active"
-                : "Table__pageButton"
-            }
-            onClick={() => changePage(p)}
-          >
-            {array[index - 1] + 2 < p ? `...${p}` : p}
-          </PageButtonComponent>
-        ))}
+
+      <div className="flex-center gap-2">
+
+            <div className="Table__visiblePagesWrapper">
+             {activePage} of {visiblePages.length} pages
+            </div>
+
+          {/* Previous */}
+          <div className="Table__prevPageWrapper">
+            <PageButtonComponent
+              className="Table__pageButton text-xs"
+              onClick={() => {
+                if (activePage === 1) return;
+                changePage(activePage - 1);
+              }}
+              disabled={activePage === 1}
+            >
+              {previousText}
+            </PageButtonComponent>
+          </div>
+
+          {/* Next */}
+          <div className="Table__nextPageWrapper">
+            <PageButtonComponent
+              className="Table__pageButton text-xs"
+              onClick={() => {
+                if (activePage === pages) return;
+                changePage(activePage + 1);
+              }}
+              disabled={activePage === pages}
+            >
+              {nextText}
+            </PageButtonComponent>
+          </div>
       </div>
 
-      {/* Next */}
-      <div className="Table__nextPageWrapper">
-        <PageButtonComponent
-          className="Table__pageButton"
-          onClick={() => {
-            if (activePage === pages) return;
-            changePage(activePage + 1);
-          }}
-          disabled={activePage === pages}
-        >
-          {nextText}
-        </PageButtonComponent>
-      </div>
     </div>
   );
 };

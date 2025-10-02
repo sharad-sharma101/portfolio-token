@@ -5,12 +5,16 @@
   
   .Table__pagination {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     padding: 20px 10px;
+    color: #A1A1AA;
+    font-size: small;
+    font-weight: 500;
+    line-height: 20px;
   }
   
   .Table__pageButton {
-    font-size: 15px;
+    font-size: small;
     outline: none;
     border: none;
     background-color: transparent;
@@ -19,11 +23,12 @@
   
   .Table__pageButton:disabled {
     cursor: not-allowed;
-    color: gray;
+    color: #52525B;
   }
   
   .Table__pageButton--active {
-    color: #45b3e3;
+    color: #A1A1AA;
     font-weight: bold;
+    cursor: pointer
   }
   

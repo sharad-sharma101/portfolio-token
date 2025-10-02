@@ -70,13 +70,13 @@ const Table = React.forwardRef<{ refreshVisible: () => void }>((props, ref) => {
       {
         header: "Price", accessorKey: "price", cell: ({ row }) => {
           const v = row.original.price;
-          return <span className="font-normal text-text-secondary">{v == null ? "-" : `$${v.toFixed(6)}`}</span>
+          return <span className="font-normal text-text-secondary">{v == null ? "-" : `$${v.toFixed(4)}`}</span>
         }
       },
       {
         header: "24h %", accessorKey: "change24h", cell: ({ row }) => {
           const v = row.original.change24h;
-          return <span className="font-normal text-text-secondary">{v == null ? "-" : v.toFixed(6)}</span>
+          return <span className="font-normal text-text-secondary">{v == null ? "-" : v.toFixed(4)}</span>
         }
       },
       {
@@ -91,7 +91,7 @@ const Table = React.forwardRef<{ refreshVisible: () => void }>((props, ref) => {
           return <span className="text[#F4F4F5] font-normal" >{row.original.holding}</span>;
         }
       },
-      { id: "value", header: "Value", cell: ({ row }) => <span className="text[#F4F4F5] font-normal" >{(Number(row.original.holding) * Number(row.original.price)).toFixed(2)}</span> },
+      { id: "value", header: "Value", cell: ({ row }) => <span className="text[#F4F4F5] font-normal" >{(Number(row.original.holding) * Number(row.original.price)).toFixed(4)}</span> },
       { id: "menu", header: "", cell: ({ row }) => <ThreeDotMenu coinID={row.original.id || ""} /> },
     ],
     []
@@ -122,7 +122,7 @@ const Table = React.forwardRef<{ refreshVisible: () => void }>((props, ref) => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header, index) => (
-                <th key={header.id} className={`text-sm font-medium text-text-secondary text-justify ${index === 0 ? "pl-6" : ""} ${index === 6 ? "w-[5%]" : "w-1/7"}`}>
+                <th key={header.id} className={`text-sm font-medium text-text-secondary text-justify ${index === 0 ? "pl-6" : ""} ${index === 6 ? "w-[5%]" : ( index === 0 ? "w-1/4" :  "w-1/7")}`}>
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                 </th>
               ))}
@@ -135,7 +135,7 @@ const Table = React.forwardRef<{ refreshVisible: () => void }>((props, ref) => {
             {rows.map((row) => (
               <tr key={row.id} className={`gap-2 ${row.original.isEditable ? 'bg-[#27272A]' : ''}`}>
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="py-2">
+                  <td key={cell.id} className="py-2 text-sm">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
@@ -149,6 +149,7 @@ const Table = React.forwardRef<{ refreshVisible: () => void }>((props, ref) => {
 
       <Pagination
         pages={Math.max(1, Math.ceil(data.length / pageSize))}
+        totalResults={data.length}
         page={pageIndex}
         onPageChange={(p) => setPageIndex(p)}
         previousText="Previous"

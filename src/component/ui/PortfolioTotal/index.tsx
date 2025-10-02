@@ -41,7 +41,7 @@ const PortfolioTotal = () => {
             .slice(0, 5)
             .map(coin => ({
                 name: coin.name,
-                share: parseFloat(coin.share.toFixed(2))
+                share: parseFloat(coin.share.toFixed(4))
             }));
 
         return {
@@ -54,8 +54,8 @@ const PortfolioTotal = () => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
+            minimumFractionDigits: 4,
+            maximumFractionDigits: 4
         }).format(value);
     };
 
