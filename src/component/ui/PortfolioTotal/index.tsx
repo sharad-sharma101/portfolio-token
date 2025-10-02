@@ -2,13 +2,15 @@ import useIsMobile from "../../../hooks/useIsMobile";
 import Card from "../Card";
 import PieChartComponent from "../PieChart";
 import { useAppSelector } from "../../../app/hooks";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { getLastUpdated } from "../../../utils";
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FFC49F'];
 
 const PortfolioTotal = () => {
     const isMobile = useIsMobile();
     const watchListRows = useAppSelector(store => store.portfolio.watchListRows);
+    const [lastUpdated, setLastUpdated] = useState<string | null>(getLastUpdated());
 
     // Calculate portfolio total and top coins
     const { totalValue, topCoins } = useMemo(() => {
@@ -57,14 +59,15 @@ const PortfolioTotal = () => {
         }).format(value);
     };
 
-    const getCurrentTime = () => {
-        return new Date().toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-        });
-    };
+    useEffect(() => {
+        setLastUpdated(getLastUpdated());
+      }, [watchListRows]);
+      
+      const formattedLastUpdated = useMemo(() => {
+        if (!lastUpdated) return "-";
+        const d = new Date(lastUpdated);
+        return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true });
+      }, [lastUpdated]);
 
     return (
         <Card className={"flex bg-dark-secondary justify-between flex-wrap"}>
@@ -78,7 +81,7 @@ const PortfolioTotal = () => {
                     </span>
                 </div>
                 <div className="font-normal text-sm leading-5 tracking-[0%] text-text-secondary">
-                    Last updated: {getCurrentTime()}
+                    Last updated: {formattedLastUpdated}
                 </div>
             </div>
             <div className={`flex flex-col gap-5 justify-start ${isMobile ? "w-full" : "w-[50%]" }`} >

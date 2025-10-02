@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useAppDispatch } from "../../../app/hooks";
 import { changleModalState } from "../../../features/portfolio/portfolioSlice";
 import useIsMobile from "../../../hooks/useIsMobile";
@@ -9,6 +10,7 @@ const Watchlist = () => {
 
     const dispatch = useAppDispatch();
     const isMobile = useIsMobile();
+    const tableRef = useRef<{ refreshVisible: () => void }>(null);
 
     return (
         <div className="flex flex-col gap-3">
@@ -20,12 +22,13 @@ const Watchlist = () => {
                 </div>
 
                 <div className="flex justify-center items-center gap-3">
-                    { isMobile ? <Button text="" icon={<RefreshIcon />} /> : <Button text="Refresh Prices" icon={<RefreshIcon />} />}
+                    { isMobile ? <Button text="" onClickFn={() => tableRef.current?.refreshVisible()} icon={<RefreshIcon />} /> : 
+                    <Button text="Refresh Prices" onClickFn={() => tableRef.current?.refreshVisible()} icon={<RefreshIcon />} />}
                     <Button text="Add Token" type="secondary" icon={<AddIconDark />} onClickFn={() => dispatch(changleModalState(true))}/>
                 </div>
             </div>
 
-            <Table />
+            <Table ref={tableRef} />
         </div>
     )
 }

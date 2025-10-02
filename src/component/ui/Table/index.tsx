@@ -8,21 +8,49 @@ import {
 import Pagination from "./pagination";
 import "./index.scss";
 import EmptyMessage from "./EmptyMessage";
-import { toWatchlistRows, type WatchListRowSerializable } from "../../../utils";
+import { toWatchlistRows, type WatchListRowSerializable, updatePricesInLocalStorage } from "../../../utils";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { setWatchListRows } from "../../../features/portfolio/portfolioSlice";
 import ThreeDotMenu from "../ThreeDotMenu";
-import useIsMobile from "../../../hooks/useIsMobile";
 import HoldingInput from "../HoldingInput";
+import LineChart from "../LineChart";
+import { useMutation } from "@tanstack/react-query"
+const apiKey = import.meta.env.VITE_CG_DEMO_API_KEY as string | undefined;
+const headers: HeadersInit = apiKey ? { "x_cg_demo_api_key": apiKey } : {};
 
 type Row = WatchListRowSerializable;
 
-
-const Table: React.FC = () => {
+const Table = React.forwardRef<{ refreshVisible: () => void }>((props, ref) => {
   const data = useAppSelector(store => store.portfolio.watchListRows);
   const dispatch = useAppDispatch();
-  const isMobile = useIsMobile()
 
+  const refreshMutation = useMutation({
+    mutationFn: async (ids: Array<string | number>) => {
+      const url = (id: string | number) =>
+        `https://api.coingecko.com/api/v3/coins/${encodeURIComponent(String(id))}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`;
+      const settled = await Promise.allSettled(ids.map(async (id) => {
+        const res = await fetch(url(id), { method: "GET", headers });
+        if (!res.ok) throw new Error(`Failed ${id}`);
+        const j = await res.json();
+        return {
+          id,
+          price: j?.market_data?.current_price?.usd ?? null,
+          change24h: j?.market_data?.price_change_percentage_24h_in_currency?.eur
+            ?? j?.market_data?.price_change_percentage_24h ?? null,
+          sparkline: j?.market_data?.sparkline_7d?.price ?? null,
+        };
+      }));
+      const success = settled.filter(s => s.status === "fulfilled").map((s: any) => s.value);
+      return success;
+    },
+    onSuccess: (success) => {
+      if (success.length > 0) {
+        updatePricesInLocalStorage(success);
+      }
+      dispatch(setWatchListRows(toWatchlistRows()));
+    },
+  });
+  
   React.useEffect(() => {
     dispatch(setWatchListRows(toWatchlistRows()));
   }, []);
@@ -53,7 +81,7 @@ const Table: React.FC = () => {
       },
       {
         header: "sparkline (7d)", accessorKey: "sparklineUrl", cell: ({ row }) => (
-          row.original.sparklineUrl ? <img src={row.original.sparklineUrl} style={{ height: 28 }} alt="sparkline" /> : "-"
+          row.original.sparklineUrl ? <LineChart data={row.original.sparklineUrl} /> : "-"
         )
       },
       {
@@ -80,6 +108,12 @@ const Table: React.FC = () => {
   });
 
   const rows = table.getRowModel().rows.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
+  React.useImperativeHandle(ref, () => ({
+    refreshVisible: () => {
+      const ids = rows.slice(0, 10).map(r => r.original.id);
+      if (ids.length) refreshMutation.mutate(ids);
+    }
+  }));
 
   return (
     <div className="w-full rounded-lg border border-solid border-table-border overflow-x-scroll">
@@ -122,6 +156,6 @@ const Table: React.FC = () => {
       />
     </div>
   );
-};
+});
 
 export default Table;
