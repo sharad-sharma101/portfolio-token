@@ -58,7 +58,6 @@ const Pagination: React.FC<PaginationProps> = ({
   }
 
   const activePage = page + 1;
-  console.log(visiblePages);
 
   if(pages <= 1) return <div className="mt-3" ></div>;
 

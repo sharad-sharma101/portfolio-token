@@ -20,7 +20,7 @@ const headers: HeadersInit = apiKey ? { "x_cg_demo_api_key": apiKey } : {};
 
 type Row = WatchListRowSerializable;
 
-const Table = React.forwardRef<{ refreshVisible: () => void }>((props, ref) => {
+const Table = React.forwardRef<{ refreshVisible: () => void }>((_props, ref) => {
   const data = useAppSelector(store => store.portfolio.watchListRows);
   const dispatch = useAppDispatch();
 
